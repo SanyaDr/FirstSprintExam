@@ -19,7 +19,7 @@ func GetExpression(w http.ResponseWriter, r *http.Request) {
 	// Проверяем что получен именно POST метод
 	if r.Method != http.MethodPost {
 		log.Println("ERROR: получен не POST метод!")
-		http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
+		returnError(w, "Method is not allowed", http.StatusUnprocessableEntity) // http.StatusMethodNotAllowed ?
 		return
 	}
 
@@ -30,25 +30,28 @@ func GetExpression(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("ERROR: Ошибка получения данных запроса! Текст ошибки: %v \n ", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		returnError(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 	err = json.Unmarshal(body, &myReq)
 	//TODO Проверь код ошибки, точно ли badRequest?
 	if err != nil {
 		log.Printf("ERROR: Ошибка обработки JSON! Текст ошибки: %v \n ", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		returnError(w, err.Error(), http.StatusUnprocessableEntity)
+		return
 	}
 
 	// Отправляем полученный expression в Calculator
 	result, err := calculator.Calc(myReq.Expression)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		returnError(w, err.Error(), http.StatusUnprocessableEntity)
 		log.Printf("ERROR: Ошибка при вычислении! Текст ошибки: %v \n ", err)
+		return
 	}
 
 	// TODO переделать на HTTP ответ
-	fmt.Fprintf(w, "Answer: %v", result)
+	//fmt.Fprintf(w, "Answer: %v", result)
+	returnAnswer(w, fmt.Sprint(result))
 	log.Printf("Получен результат: %v", result)
 
 }

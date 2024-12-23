@@ -1,6 +1,9 @@
 package calculator
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func simplifyParentheses(expression string) (string, error) {
 	parOpenCount, parCloseCount := 0, 0
@@ -45,14 +48,15 @@ func simplifyParentheses(expression string) (string, error) {
 	return expression, nil
 }
 
-// TODO Заменить функцию на TrimSpace
 // Убрать пробелы
 func simplifySpaces(inp string) string {
-	var res string
-	for _, v := range inp {
-		if v != ' ' {
-			res += string(v)
-		}
-	}
-	return res
+	result := strings.ReplaceAll(inp, " ", "")
+	return result
+	//var res string
+	//for _, v := range inp {
+	//	if v != ' ' {
+	//		res += string(v)
+	//	}
+	//}
+	//return res
 }

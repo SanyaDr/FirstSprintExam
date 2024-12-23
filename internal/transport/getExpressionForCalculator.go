@@ -9,13 +9,13 @@ import (
 	"net/http"
 )
 
-type Request struct {
+type MyRequest struct {
 	Expression string `json:"expression"`
 }
 
 // GetExpression Метод чтения выражения и отправка его в Calculation
 func GetExpression(w http.ResponseWriter, r *http.Request) {
-	var myReq Request
+	var myReq MyRequest
 	// Проверяем что получен именно POST метод
 	if r.Method != http.MethodPost {
 		log.Println("ERROR: получен не POST метод!")
@@ -27,17 +27,17 @@ func GetExpression(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 
 	log.Printf("body:\n %v", string(body))
+	log.Printf("Request.Header.content-type: %v", r.Header.Get("Content-Type"))
 
 	if err != nil {
-		log.Printf("ERROR: Ошибка получения данных запроса! Текст ошибки: %v \n ", err)
+		log.Printf("ERROR: Ошибка получения данных запроса! Текст ошибки: %v", err)
 		returnError(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 	err = json.Unmarshal(body, &myReq)
-	//TODO Проверь код ошибки, точно ли badRequest?
 	if err != nil {
-		log.Printf("ERROR: Ошибка обработки JSON! Текст ошибки: %v \n ", err)
-		returnError(w, err.Error(), http.StatusUnprocessableEntity)
+		log.Printf("ERROR: Ошибка обработки JSON! Текст ошибки: %v", err)
+		returnError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -45,11 +45,10 @@ func GetExpression(w http.ResponseWriter, r *http.Request) {
 	result, err := calculator.Calc(myReq.Expression)
 	if err != nil {
 		returnError(w, err.Error(), http.StatusUnprocessableEntity)
-		log.Printf("ERROR: Ошибка при вычислении! Текст ошибки: %v \n ", err)
+		log.Printf("ERROR: Ошибка при вычислении! Текст ошибки: %v", err)
 		return
 	}
 
-	// TODO переделать на HTTP ответ
 	//fmt.Fprintf(w, "Answer: %v", result)
 	returnAnswer(w, fmt.Sprint(result))
 	log.Printf("Получен результат: %v", result)

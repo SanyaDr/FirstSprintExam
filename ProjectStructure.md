@@ -6,11 +6,13 @@ _Описание структуры проекта_
 │ $~~~~~~~~$ └─ main.go </br>
 ├── internal[^3]</br>
 │ $~~~~~~~~$ ├─ app[^4] </br>
-│ $~~~~~~~~~$ │ $~~~~~~$ └ app.go </br>
+│ $~~~~~~~~~$ │ $~~~~~~$ ├ app.go </br>
+│ $~~~~~~~~~$ │ $~~~~~~$ └ handlers.go </br>
 │ $~~~~~~~~$ └─ transport [^5] </br>
-│ $~~~~~~~~~~~~~~~~~~~~~$ └ ... </br>
+│ $~~~~~~~~~~~~~~~~~~~~~$ ├ getExpressionForCalculator.go </br>
+│ $~~~~~~~~~~~~~~~~~~~~~$ └ returnJson.go </br>
 ├── pkg[^6]</br>
-│ $~~~~~~~~$ └─ Calculation </br>
+│ $~~~~~~~~$ └─ calculation </br>
 │ $~~~~~~~~~~~~~~~~~$ ├─ errors.go </br>
 │ $~~~~~~~~~~~~~~~~~$ ├─ separators.go </br>
 │ $~~~~~~~~~~~~~~~~~$ ├─ simplifyer.go </br>
